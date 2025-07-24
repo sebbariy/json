@@ -1,0 +1,111 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v3",
+    "title": "Zoho Books API"
+  },
+  "host": "www.zohoapis.com",
+  "basePath": "/books/v3",
+  "schemes": ["https"],
+  "securityDefinitions": {
+    "OAuth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://accounts.zoho.com/oauth/v2/auth",
+      "tokenUrl": "https://accounts.zoho.com/oauth/v2/token"
+    }
+  },
+  "paths": {
+    "/invoices": {
+      "get": {
+        "operationId": "ListInvoices",
+        "summary": "List all invoices",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/InvoiceListResponse"
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CreateInvoice",
+        "summary": "Create new invoice",
+        "parameters": [
+          {
+            "name": "organization_id",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InvoiceRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "InvoiceRequest": {
+      "type": "object",
+      "properties": {
+        "customer_id": {"type": "string"},
+        "invoice_number": {"type": "string"},
+        "date": {"type": "string"},
+        "line_items": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/LineItem"}
+        }
+      }
+    },
+    "LineItem": {
+      "type": "object",
+      "properties": {
+        "item_id": {"type": "string"},
+        "name": {"type": "string"},
+        "rate": {"type": "number"},
+        "quantity": {"type": "number"}
+      }
+    },
+    "InvoiceListResponse": {
+      "type": "object",
+      "properties": {
+        "code": {"type": "integer"},
+        "message": {"type": "string"},
+        "invoices": {
+          "type": "array",
+          "items": {"$ref": "#/definitions/Invoice"}
+        }
+      }
+    },
+    "Invoice": {
+      "type": "object",
+      "properties": {
+        "invoice_id": {"type": "string"},
+        "invoice_number": {"type": "string"},
+        "customer_name": {"type": "string"},
+        "total": {"type": "number"},
+        "status": {"type": "string"}
+      }
+    }
+  }
+}
